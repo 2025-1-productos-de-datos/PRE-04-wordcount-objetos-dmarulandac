@@ -1,53 +1,38 @@
-import argparse
+
+from homework.src._internals.count_words import CountWordsMixin
+from homework.src._internals.parse_args import ParseArgsMixin
+from homework.src._internals.preprocess_lines import PreprocessLinesMixin
+from homework.src._internals.read_all_lines import ReadAllLinesMixin
+from homework.src._internals.split_into_words import SplitIntoWordsMixin
+from homework.src._internals.write_word_counts import WriteWordCountMixin
 
 
-class ArgumentParser:
+class WordCountApp(
+    ParseArgsMixin,
+    ReadAllLinesMixin,
+    PreprocessLinesMixin,
+    SplitIntoWordsMixin,
+    CountWordsMixin,
+    WriteWordCountMixin
+
+):
     def __init__(self):
-
-        self.input=None
-        self.output = None
-        self.parser= None
-        self.crear_parser()
-
-    def crear_parser(self):
-        
-        self.parser = argparse.ArgumentParser(description="Count words in files.")
-        self.parser.add_argument(
-            "input",
-            type=str,
-            help="Path to the input folder containing files to process",
-        )
-        self.parser.add_argument(
-            "output",
-            type=str,
-            help="Path to the output folder for results",
-        )
+        self.input_folder = None
+        self.output_folder = None
+        self.lines = None
+        self.preprocessed_lines = None
+        self.words=None
+        self.word_counts=None
 
     def run(self):
-        
 
-        parsed_args = self.parser.parse_args()
-        self.input=parsed_args.input
-        self.output=parsed_args.output
-
-class Persona:
-    def __init__(self,nombre,apellido):
-        self.nombre=nombre
-        self.apellido=apellido
-    def print(self):
-        print("El nombre es",self.nombre," ",self.apellido)
+        self.parse_args()
+        self.read_all_lines()
+        self.preprocess_lines()
+        self.split_into_words()
+        self.count_words()
+        self.write_word_counts()
 
 
-
-
-def main():
-    #argument_parser=ArgumentParser()
-    #argument_parser.run()
-    #print(argument_parser.input)
-    #print(argument_parser.output)
-
-    pepita=Persona("Pepita","Rojas")
-    marcos=Persona("Marcos","Puetas")
-
-    pepita.print()
-    marcos.print()
+if __name__ == "__main__":
+    WordCountApp().run()
